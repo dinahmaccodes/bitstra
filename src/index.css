@@ -124,3 +124,26 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Background image styling for pages */
+.page-with-background {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.page-with-background::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("/background-image.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  z-index: 0;
+  pointer-events: none;
+}

@@ -37,11 +37,11 @@ const Airtime = () => {
   const [showTransactionStatus, setShowTransactionStatus] = useState(false);
 
   const topUpOptions = [
-    { amount: 100, cashback: "0.12Sats Cashback" },
-    { amount: 200, cashback: "0.25Sats Cashback" },
-    { amount: 500, cashback: "0.61Sats Cashback" },
-    { amount: 1000, cashback: "1.23Sats Cashback" },
-    { amount: 2000, cashback: "2.45Sats Cashback" },
+    { amount: 100 },
+    { amount: 200 },
+    { amount: 500 },
+    { amount: 1000 },
+    { amount: 2000 },
   ];
 
   // Load remembered data on mount
@@ -148,7 +148,7 @@ const Airtime = () => {
   };
 
   return (
-    <>
+    <div className="page-with-background">
       <TransactionStatus
         isVisible={showTransactionStatus}
         onComplete={handleTransactionComplete}
@@ -233,7 +233,6 @@ const Airtime = () => {
                 <TopUpButton
                   key={option.amount}
                   amount={option.amount}
-                  cashback={option.cashback}
                   selected={selectedAmount === option.amount}
                   onClick={() => {
                     setSelectedAmount(option.amount);
@@ -291,7 +290,7 @@ const Airtime = () => {
           </Button>
         </div>
       </FormCard>
-    </>
+    </div>
   );
 };
 
