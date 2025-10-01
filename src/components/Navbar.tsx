@@ -1,5 +1,4 @@
 import { Link, useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   const location = useLocation();
@@ -13,11 +12,11 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="w-full bg-surface border-b border-border">
+    <nav className="w-full bg-surface border-b border-border shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <div className="flex items-center space-x-3">
             <Link to="/" className="text-2xl font-bold text-foreground">
               Bitstra
             </Link>
@@ -30,10 +29,10 @@ const Navbar = () => {
                 <Link
                   key={item.name}
                   to={item.path}
-                  className={`px-3 py-2 text-sm font-medium transition-colors ${
+                  className={`px-3 py-2 text-sm font-medium transition-colors rounded-md ${
                     location.pathname === item.path
-                      ? "text-success"
-                      : "text-muted-foreground hover:text-foreground"
+                      ? "text-success bg-success/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   }`}
                 >
                   {item.name}
@@ -42,11 +41,11 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Connect Wallet Button */}
-          <div className="flex items-center">
-            <Button variant="success" className="ml-4">
-              Connect Wallet
-            </Button>
+          {/* Right side info */}
+          <div className="flex items-center space-x-3">
+            <div className="text-sm text-muted-foreground">
+              Bitcoin Lightning Payments
+            </div>
           </div>
         </div>
       </div>

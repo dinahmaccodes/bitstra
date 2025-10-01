@@ -1,11 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FormCard from "@/components/FormCard";
+import TransactionStatus from "@/components/TransactionStatus";
 import TopUpButton from "@/components/TopUpButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 
 const UtilityBills = () => {
   const navigate = useNavigate();
@@ -14,6 +22,9 @@ const UtilityBills = () => {
   const [meterNumber, setMeterNumber] = useState("");
   const [provider, setProvider] = useState("");
   const [utilityType, setUtilityType] = useState("Electricity");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showTransactionStatus, setShowTransactionStatus] = useState(false);
+  const { toast } = useToast();
 
   const topUpOptions = [
     { amount: 2000, cashback: "2.45Sats Cashback" },
@@ -29,18 +40,55 @@ const UtilityBills = () => {
     { id: "Cable", icon: "📺", label: "Cable" },
   ];
 
-  const handleNext = () => {
+  const handleNext = async () => {
     const amount = selectedAmount || parseInt(customAmount);
-    if (meterNumber && provider && amount) {
-      navigate("/confirm", {
+    if (!meterNumber || !provider || !amount) {
+      toast({
+        title: "Missing Information",
+        description: "Please enter meter/account number, provider, and amount",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Show transaction status modal
+    setShowTransactionStatus(true);
+    setIsLoading(true);
+
+    try {
+      // Simulate transaction processing
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      toast({
+        title: "Transaction Successful!",
+        description: `Utility bill paid for ${meterNumber}`,
+        variant: "default",
+      });
+
+      navigate("/payment", {
         state: {
           type: "utility",
           recipient: meterNumber,
           amount: amount,
           details: `${utilityType} bill - ${provider}`,
-          provider: provider
-        }
+          provider,
+          transactionId: `TXN-${Date.now()}`,
+          status: "completed",
+        },
       });
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to process utility bill payment.";
+      toast({
+        title: "Transaction Failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+      setShowTransactionStatus(false);
     }
   };
 
@@ -49,22 +97,29 @@ const UtilityBills = () => {
       <div className="space-y-6">
         {/* Asset Selection */}
         <div>
-          <Label htmlFor="asset" className="text-sm font-medium text-foreground">Asset</Label>
-          <Select defaultValue="bitcoin-lightning">
+          <Label
+            htmlFor="asset"
+            className="text-sm font-medium text-foreground"
+          >
+            Asset
+          </Label>
+          <Select defaultValue="lightning-network">
             <SelectTrigger className="mt-1">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="bitcoin-lightning">Bitcoin Lightning</SelectItem>
-              <SelectItem value="bitcoin">Bitcoin</SelectItem>
-              <SelectItem value="usdt">USDT</SelectItem>
+              <SelectItem value="lightning-network">
+                Lightning Network
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         {/* Utility Type */}
         <div>
-          <Label className="text-sm font-medium text-foreground">Utility Type</Label>
+          <Label className="text-sm font-medium text-foreground">
+            Utility Type
+          </Label>
           <div className="flex gap-2 mt-2">
             {utilityTypes.map((type) => (
               <button
@@ -85,7 +140,12 @@ const UtilityBills = () => {
 
         {/* Provider */}
         <div>
-          <Label htmlFor="provider" className="text-sm font-medium text-foreground">Provider</Label>
+          <Label
+            htmlFor="provider"
+            className="text-sm font-medium text-foreground"
+          >
+            Provider
+          </Label>
           <Select value={provider} onValueChange={setProvider}>
             <SelectTrigger className="mt-1">
               <SelectValue placeholder="IKEDC" />
@@ -101,19 +161,19 @@ const UtilityBills = () => {
 
         {/* Meter ID / Account Number */}
         <div>
-          <Label htmlFor="meter" className="text-sm font-medium text-foreground">
+          <Label
+            htmlFor="meter"
+            className="text-sm font-medium text-foreground"
+          >
             Meter ID / Account Number
           </Label>
-          <Select value={meterNumber} onValueChange={setMeterNumber}>
-            <SelectTrigger className="mt-1">
-              <SelectValue placeholder="0123456789" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="0123456789">0123456789</SelectItem>
-              <SelectItem value="9876543210">9876543210</SelectItem>
-              <SelectItem value="1234567890">1234567890</SelectItem>
-            </SelectContent>
-          </Select>
+          <Input
+            type="text"
+            placeholder="Enter meter/account number"
+            value={meterNumber}
+            onChange={(e) => setMeterNumber(e.target.value)}
+            className="mt-1"
+          />
         </div>
 
         {/* Top Up Options */}
@@ -137,36 +197,49 @@ const UtilityBills = () => {
 
         {/* Custom Amount */}
         <div>
-          <Label htmlFor="amount" className="text-sm font-medium text-foreground">
+          <Label
+            htmlFor="amount"
+            className="text-sm font-medium text-foreground"
+          >
             Amount (₦)
           </Label>
-          <Select value={customAmount} onValueChange={(value) => {
-            setCustomAmount(value);
-            setSelectedAmount(null);
-          }}>
-            <SelectTrigger className="mt-1">
-              <SelectValue placeholder="10,000" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="10000">₦10,000</SelectItem>
-              <SelectItem value="15000">₦15,000</SelectItem>
-              <SelectItem value="20000">₦20,000</SelectItem>
-              <SelectItem value="25000">₦25,000</SelectItem>
-              <SelectItem value="30000">₦30,000</SelectItem>
-            </SelectContent>
-          </Select>
+          <Input
+            type="number"
+            min={50}
+            max={50000}
+            placeholder="Enter custom amount"
+            value={customAmount}
+            onChange={(e) => {
+              setCustomAmount(e.target.value);
+              setSelectedAmount(null);
+            }}
+            className="mt-1"
+          />
         </div>
 
         {/* Next Button */}
-        <Button 
-          variant="success" 
+        <Button
+          variant="success"
           className="w-full h-12"
           onClick={handleNext}
-          disabled={!meterNumber || !provider || (!selectedAmount && !customAmount)}
+          disabled={
+            !meterNumber ||
+            !provider ||
+            (!selectedAmount && !customAmount) ||
+            isLoading
+          }
         >
-          Next
+          {isLoading ? "Processing..." : "Next"}
         </Button>
       </div>
+
+      {/* Transaction Status Modal */}
+      {showTransactionStatus && (
+        <TransactionStatus
+          isVisible={showTransactionStatus}
+          onComplete={() => setShowTransactionStatus(false)}
+        />
+      )}
     </FormCard>
   );
 };

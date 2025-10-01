@@ -27,7 +27,7 @@ const App = () => (
             <Route path="/airtime" element={<Airtime />} />
             <Route path="/data" element={<Data />} />
             <Route path="/utility-bills" element={<UtilityBills />} />
-            <Route path="/confirm" element={<Confirm />} />
+            <Route path="/payment" element={<Confirm />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

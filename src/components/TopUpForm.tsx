@@ -9,6 +9,12 @@ interface TopUpFormProps {
 
 export default function TopUpForm({ type }: TopUpFormProps) {
   const [phone, setPhone] = useState("");
+  // Handler to enforce max 10 digits and numeric only
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, "");
+    if (value.length > 10) value = value.slice(0, 10);
+    setPhone(value);
+  };
   const [amount, setAmount] = useState<number>(100);
   const [planId, setPlanId] = useState(""); // for data
   const [meterNumber, setMeterNumber] = useState(""); // for electricity
@@ -44,8 +50,11 @@ export default function TopUpForm({ type }: TopUpFormProps) {
           className="border p-2 w-full"
           placeholder="Phone number"
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          onChange={handlePhoneChange}
           required
+          maxLength={10}
+          inputMode="numeric"
+          pattern="[0-9]{10}"
         />
       )}
       {type === "data" && (
@@ -76,7 +85,7 @@ export default function TopUpForm({ type }: TopUpFormProps) {
       />
       <input
         className="border p-2 w-full"
-        placeholder="Provider (e.g. mtn, glo)"
+        placeholder="Network Provider (e.g. mtn, glo)"
         value={provider}
         onChange={(e) => setProvider(e.target.value)}
         required
