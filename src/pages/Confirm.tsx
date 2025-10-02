@@ -34,7 +34,6 @@ const Confirm = () => {
     minute: "2-digit",
   });
 
-  // Mock QR data - in real app this would be the Lightning invoice
   const qrData = `lnbc${amountInSats}000m1p${type}_${amount}_${provider?.toLowerCase()}_${Date.now()}`;
 
   const getProductIcon = () => {
