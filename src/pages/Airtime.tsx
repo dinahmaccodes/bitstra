@@ -24,6 +24,7 @@ const Airtime = () => {
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
   const [customAmount, setCustomAmount] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
   // Handler to enforce max 10 digits and numeric only
   const handleMobileNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, ""); // Remove non-digits
@@ -49,20 +50,34 @@ const Airtime = () => {
     const savedNumber = localStorage.getItem("savedMobileNumber");
     const savedCode = localStorage.getItem("savedCountryCode");
     const savedProv = localStorage.getItem("savedProvider");
+    const savedEmail = localStorage.getItem("savedCustomerEmail");
 
     if (savedNumber) setMobileNumber(savedNumber);
     if (savedCode) setCountryCode(savedCode);
     if (savedProv) setProvider(savedProv);
+    if (savedEmail) setCustomerEmail(savedEmail);
   }, []);
 
   const handleNext = async () => {
     const amount = selectedAmount || parseInt(customAmount);
 
     // Validation
-    if (!mobileNumber || !amount) {
+    if (!mobileNumber || !amount || !customerEmail) {
       toast({
         title: "Missing Information",
-        description: "Please enter a mobile number and select an amount",
+        description:
+          "Please enter a mobile number, email address, and select an amount",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(customerEmail)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address",
         variant: "destructive",
       });
       return;
@@ -89,21 +104,22 @@ const Airtime = () => {
 
       // Show success message
       toast({
-        title: "Transaction Successful! 🎉",
+        title: "Transaction Successful",
         description: `Airtime of ₦${amount.toLocaleString()} sent to ${countryCode} ${mobileNumber}`,
         variant: "default",
       });
 
       // Navigate to payment page with transaction details
-      navigate("/payment", {
+      navigate("/confirm", {
         state: {
           type: "airtime",
           recipient: `${countryCode} ${mobileNumber}`,
           amount: amount,
           details: "Airtime top-up",
           provider: provider,
+          customerEmail: customerEmail,
           transactionId: `TXN-${Date.now()}`,
-          status: "completed",
+          status: "pending",
         },
       });
 
@@ -112,6 +128,7 @@ const Airtime = () => {
         localStorage.setItem("savedMobileNumber", mobileNumber);
         localStorage.setItem("savedCountryCode", countryCode);
         localStorage.setItem("savedProvider", provider);
+        localStorage.setItem("savedCustomerEmail", customerEmail);
       }
     } catch (error: unknown) {
       console.error("Airtime purchase error:", error);
@@ -221,6 +238,27 @@ const Airtime = () => {
                 pattern="[0-9]{10}"
               />
             </div>
+          </div>
+
+          {/* Customer Email */}
+          <div>
+            <Label
+              htmlFor="email"
+              className="text-sm font-medium text-foreground"
+            >
+              Email Address
+            </Label>
+            <Input
+              placeholder="your.email@example.com"
+              value={customerEmail}
+              onChange={(e) => setCustomerEmail(e.target.value)}
+              className="mt-1"
+              type="email"
+              required
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Receipt will be sent to this email address
+            </p>
           </div>
 
           {/* Top Up Options */}

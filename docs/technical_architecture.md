@@ -64,38 +64,38 @@ graph TB
 flowchart TD
     Start([User Visits App]) --> Home[Home Page]
     Home --> ServiceSelect{Select Service}
-    
+
     ServiceSelect -->|Airtime| AirtimePage[Airtime Page]
     ServiceSelect -->|Data| DataPage[Data Page]
     ServiceSelect -->|Utility Bills| UtilityPage[Utility Bills Page]
-    
+
     AirtimePage --> AirtimeForm[Airtime Form]
-    DataPage --> DataForm[Data Form] 
+    DataPage --> DataForm[Data Form]
     UtilityPage --> UtilityForm[Utility Form]
-    
+
     AirtimeForm --> FormValidation{Form Validation}
     DataForm --> FormValidation
     UtilityForm --> FormValidation
-    
+
     FormValidation -->|Invalid| ErrorDisplay[Display Validation Errors]
     FormValidation -->|Valid| ConfirmPage[Confirmation Page]
-    
+
     ConfirmPage --> QRGeneration[Generate QR Code]
     QRGeneration --> MockQR[Mock QR Code Display]
     MockQR --> PaymentFlow[Payment Flow]
-    
+
     PaymentFlow --> TransactionStatus[Transaction Status]
     TransactionStatus --> Success[Success Page]
     TransactionStatus --> Failed[Failed Page]
-    
+
     ErrorDisplay --> AirtimeForm
     ErrorDisplay --> DataForm
     ErrorDisplay --> UtilityForm
-    
+
     Failed --> Retry{Retry Payment?}
     Retry -->|Yes| ConfirmPage
     Retry -->|No| Home
-    
+
     Success --> Home
 ```
 
@@ -112,14 +112,14 @@ sequenceDiagram
 
     User->>Frontend: Select service (Airtime/Data/Utility)
     Frontend->>User: Display service form
-    
+
     User->>Frontend: Fill form and submit
     Frontend->>Frontend: Validate form data
-    
+
     alt Form is valid
         Frontend->>BitnobSDK: Create payment request
         BitnobSDK->>BitnobAPI: POST /bills/{service}
-        
+
         alt Sandbox Mode
             BitnobAPI-->>BitnobSDK: Mock response
             BitnobSDK-->>Frontend: Mock QR code data
@@ -129,13 +129,13 @@ sequenceDiagram
             BitnobAPI-->>BitnobSDK: Return invoice data
             BitnobSDK-->>Frontend: Return QR code data
         end
-        
+
         Frontend->>User: Display QR code for payment
-        
+
         User->>Frontend: Scan QR and pay
         Frontend->>BitnobSDK: Check payment status
         BitnobSDK->>BitnobAPI: GET /bills/transaction/{id}
-        
+
         alt Payment successful
             BitnobAPI->>ServiceProvider: Execute service provision
             ServiceProvider-->>BitnobAPI: Confirm completion
@@ -203,15 +203,15 @@ graph TD
     AirtimePage --> TransactionStatus
     DataPage --> DataPlanCard
     ConfirmPage --> Button
-    
+
     FormCard --> Input
     FormCard --> Select
     FormCard --> Button
     TopUpForm --> BitnobLib
-    
+
     BitnobLib --> Utils
     TransactionStatus --> Toast
-    
+
     AirtimePage --> UseMobile
     AirtimePage --> UseToast
 ```
@@ -252,23 +252,23 @@ graph LR
     Components --> APIClient
     Forms --> APIClient
     State --> APIClient
-    
+
     APIClient --> ErrorHandler
     APIClient --> TypeDefs
     APIClient --> Interceptors
-    
+
     APIClient --> AirtimeAPI
     APIClient --> DataAPI
     APIClient --> ElectricityAPI
     APIClient --> CableTVAPI
     APIClient --> LightningAPI
     APIClient --> WalletAPI
-    
+
     AirtimeAPI --> SandboxEnv
     AirtimeAPI --> ProdEnv
     DataAPI --> SandboxEnv
     DataAPI --> ProdEnv
-    
+
     ProdEnv --> LightningNet
     ProdEnv --> ServiceProviders
 ```
@@ -311,28 +311,28 @@ flowchart TD
 
     ReactApp --> BitnobClient
     BitnobClient --> APIGateway
-    
+
     APIGateway --> Auth
     Auth --> RateLimit
     RateLimit --> BillsService
     RateLimit --> LightningService
     RateLimit --> WalletService
-    
+
     BillsService --> TransactionService
     LightningService --> TransactionService
-    
+
     TransactionService --> Database
     TransactionService --> Cache
     TransactionService --> Queue
-    
+
     BillsService --> TelecomProviders
     BillsService --> UtilityProviders
     BillsService --> CableProviders
-    
+
     LightningService --> LightningNetwork
-    
+
     TransactionService --> Monitoring
-    
+
     Queue --> TelecomProviders
     Queue --> UtilityProviders
     Queue --> CableProviders
@@ -365,11 +365,11 @@ graph TB
     DevApp --> SandboxAPI
     SandboxAPI --> MockServices
     MockServices --> TestData
-    
+
     ProdApp --> ProdAPI
     ProdAPI --> LiveServices
     LiveServices --> RealBitcoin
-    
+
     DevApp --> EnvVars
     ProdApp --> EnvVars
     EnvVars --> APIKeys
@@ -413,12 +413,12 @@ graph TD
     APIAuth --> Bearer
     Bearer --> RateLimit
     RateLimit --> RequestSigning
-    
+
     RequestSigning --> Lightning
     Lightning --> InvoiceValidation
     InvoiceValidation --> PaymentVerification
     PaymentVerification --> WalletSecurity
-    
+
     WalletSecurity --> Encryption
     Encryption --> NoStorage
     NoStorage --> Logging
@@ -427,18 +427,18 @@ graph TD
 
 ## Technology Stack
 
-| Layer | Technology | Purpose |
-|-------|------------|---------|
-| **Frontend Framework** | React 18 + TypeScript | Component-based UI development |
-| **Build Tool** | Vite | Fast development and build process |
-| **Styling** | TailwindCSS + Shadcn/UI | Utility-first CSS and component library |
-| **Routing** | React Router DOM | Client-side navigation |
-| **State Management** | TanStack Query | Server state management and caching |
-| **Form Handling** | React Hook Form + Zod | Form validation and data handling |
-| **HTTP Client** | Axios | API communication with interceptors |
-| **Payment Integration** | Bitnob SDK | Bitcoin Lightning payment processing |
-| **QR Code Generation** | qrcode.react | Payment QR code display |
-| **UI Components** | Radix UI + Lucide React | Accessible components and icons |
+| Layer                   | Technology              | Purpose                                 |
+| ----------------------- | ----------------------- | --------------------------------------- |
+| **Frontend Framework**  | React 18 + TypeScript   | Component-based UI development          |
+| **Build Tool**          | Vite                    | Fast development and build process      |
+| **Styling**             | TailwindCSS + Shadcn/UI | Utility-first CSS and component library |
+| **Routing**             | React Router DOM        | Client-side navigation                  |
+| **State Management**    | TanStack Query          | Server state management and caching     |
+| **Form Handling**       | React Hook Form + Zod   | Form validation and data handling       |
+| **HTTP Client**         | Axios                   | API communication with interceptors     |
+| **Payment Integration** | Bitnob SDK              | Bitcoin Lightning payment processing    |
+| **QR Code Generation**  | qrcode.react            | Payment QR code display                 |
+| **UI Components**       | Radix UI + Lucide React | Accessible components and icons         |
 
 ## Key Features
 
@@ -484,11 +484,11 @@ graph TB
 
     Dev --> DevServer
     DevServer --> Sandbox
-    
+
     Dev --> StagingBuild
     StagingBuild --> StagingDeploy
     StagingDeploy --> StagingAPI
-    
+
     StagingBuild --> ProdBuild
     ProdBuild --> CDN
     CDN --> ProdAPI

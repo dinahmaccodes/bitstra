@@ -23,6 +23,7 @@ const Data = () => {
     price: string;
   } | null>(null);
   const [mobileNumber, setMobileNumber] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
   const [selectedNetwork, setSelectedNetwork] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showTransactionStatus, setShowTransactionStatus] = useState(false);
@@ -84,11 +85,22 @@ const Data = () => {
   };
 
   const handleNext = async () => {
-    if (!mobileNumber || !selectedPlan || !selectedNetwork) {
+    if (!mobileNumber || !selectedPlan || !selectedNetwork || !customerEmail) {
       toast({
         title: "Missing Information",
         description:
-          "Please enter a mobile number, select a network, and choose a plan",
+          "Please enter a mobile number, email address, select a network, and choose a plan",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(customerEmail)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address",
         variant: "destructive",
       });
       return;
@@ -103,12 +115,12 @@ const Data = () => {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       toast({
-        title: "Transaction Successful!",
+        title: "Transaction Successful",
         description: `Data plan sent to +234 ${mobileNumber}`,
         variant: "default",
       });
 
-      navigate("/payment", {
+      navigate("/confirm", {
         state: {
           type: "data",
           recipient: `+234 ${mobileNumber}`,
@@ -117,8 +129,9 @@ const Data = () => {
           ),
           details: `${selectedPlan.data} ${selectedPlan.duration} plan`,
           provider: selectedNetwork,
+          customerEmail: customerEmail,
           transactionId: `TXN-${Date.now()}`,
-          status: "completed",
+          status: "pending",
         },
       });
     } catch (error: unknown) {
@@ -178,6 +191,27 @@ const Data = () => {
                 pattern="[0-9]{10}"
               />
             </div>
+          </div>
+
+          {/* Customer Email */}
+          <div>
+            <Label
+              htmlFor="email"
+              className="text-sm font-medium text-foreground"
+            >
+              Email Address
+            </Label>
+            <Input
+              placeholder="your.email@example.com"
+              value={customerEmail}
+              onChange={(e) => setCustomerEmail(e.target.value)}
+              className="mt-1"
+              type="email"
+              required
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Receipt will be sent to this email address
+            </p>
           </div>
 
           {/* Network Selection */}

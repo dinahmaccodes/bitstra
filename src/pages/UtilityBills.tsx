@@ -20,6 +20,7 @@ const UtilityBills = () => {
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
   const [customAmount, setCustomAmount] = useState("");
   const [meterNumber, setMeterNumber] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
   const [provider, setProvider] = useState("");
   const [utilityType, setUtilityType] = useState("Electricity");
   const [isLoading, setIsLoading] = useState(false);
@@ -42,10 +43,22 @@ const UtilityBills = () => {
 
   const handleNext = async () => {
     const amount = selectedAmount || parseInt(customAmount);
-    if (!meterNumber || !provider || !amount) {
+    if (!meterNumber || !provider || !amount || !customerEmail) {
       toast({
         title: "Missing Information",
-        description: "Please enter meter/account number, provider, and amount",
+        description:
+          "Please enter meter/account number, email address, provider, and amount",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(customerEmail)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address",
         variant: "destructive",
       });
       return;
@@ -60,20 +73,21 @@ const UtilityBills = () => {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       toast({
-        title: "Transaction Successful!",
+        title: "Transaction Successful",
         description: `Utility bill paid for ${meterNumber}`,
         variant: "default",
       });
 
-      navigate("/payment", {
+      navigate("/confirm", {
         state: {
           type: "utility",
           recipient: meterNumber,
           amount: amount,
           details: `${utilityType} bill - ${provider}`,
           provider,
+          customerEmail: customerEmail,
           transactionId: `TXN-${Date.now()}`,
-          status: "completed",
+          status: "pending",
         },
       });
     } catch (error: unknown) {
@@ -160,10 +174,10 @@ const UtilityBills = () => {
             </Select>
           </div>
 
-          {/* Meter ID / Account Number */}
+          {/* Meter/Account Number */}
           <div>
             <Label
-              htmlFor="meter"
+              htmlFor="meterNumber"
               className="text-sm font-medium text-foreground"
             >
               Meter ID / Account Number
@@ -175,6 +189,27 @@ const UtilityBills = () => {
               onChange={(e) => setMeterNumber(e.target.value)}
               className="mt-1"
             />
+          </div>
+
+          {/* Customer Email */}
+          <div>
+            <Label
+              htmlFor="email"
+              className="text-sm font-medium text-foreground"
+            >
+              Email Address
+            </Label>
+            <Input
+              placeholder="your.email@example.com"
+              value={customerEmail}
+              onChange={(e) => setCustomerEmail(e.target.value)}
+              className="mt-1"
+              type="email"
+              required
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Receipt will be sent to this email address
+            </p>
           </div>
 
           {/* Top Up Options */}

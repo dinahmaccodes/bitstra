@@ -9,6 +9,7 @@ import Airtime from "./pages/Airtime";
 import Data from "./pages/Data";
 import UtilityBills from "./pages/UtilityBills";
 import Confirm from "./pages/Confirm";
+import Success from "./pages/Success";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 
@@ -27,7 +28,9 @@ const App = () => (
             <Route path="/airtime" element={<Airtime />} />
             <Route path="/data" element={<Data />} />
             <Route path="/utility-bills" element={<UtilityBills />} />
+            <Route path="/confirm" element={<Confirm />} />
             <Route path="/payment" element={<Confirm />} />
+            <Route path="/success" element={<Success />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
