@@ -1,12 +1,26 @@
-# Bitstra - Project Build Guide
+# Bitstra
 
-## Overview 
+Bitstra is an open-source web platform that enables people—especially women—to buy mobile data, airtime, and pay utility bills using Bitcoin (Lightning). The project aims to reduce friction for everyday transactions and improve financial autonomy.
 
-Bitstra is a Bitcoin Lightning Network payment application that enables users to pay for airtime, data plans, and utility bills in Nigeria. The project is built using React, TypeScript, Vite, TailwindCSS, and integrates with the Bitnob API for Bitcoin Lightning payments.
+## Why
 
-## Architecture 
+During protests and political unrest, activists and communities can have banking and payment accounts restricted or frozen. Many women across Africa are unbanked or have limited access to formal financial services and can lose access to accounts. Bitstra provides an alternative payment path so women can reliably pay for household needs—mobile data, airtime, and utility bills—helping them manage essential responsibilities for their families and communities.
 
-The application follows a modern React architecture with the following key components:
+## How this helps women
+
+- Provides alternative payment rails for users without traditional banking access.
+- Reduces friction for routine purchases like airtime and data.
+- Encourages locally relevant integrations that support daily life and work.
+
+## What it is
+
+- A React + TypeScript single-page application.
+- Built with Vite and styled with TailwindCSS and shadcn/ui components.
+- Integrates with a Lightning payment provider (see `src/lib/bitnob.ts`).
+
+## Architecture - Current MVP Version
+
+Bitstra follows a modern React architecture with the following key components:
 
 - **Frontend Framework**: React 18 with TypeScript
 - **Build Tool**: Vite with SWC for fast compilation
@@ -17,6 +31,10 @@ The application follows a modern React architecture with the following key compo
 - **Payment Integration**: Bitnob API for Bitcoin Lightning payments
 - **QR Code Generation**: Mock implementation due to Bitnob sandbox limitations
 
+## Image of Flow and Technical Architecture
+
+![alt text](<Screenshot from 2025-10-03 19-51-39.png>)
+
 ## Prerequisites
 
 Before building the project, ensure you have the following installed:
@@ -25,256 +43,80 @@ Before building the project, ensure you have the following installed:
 - npm or yarn package manager
 - Git for version control
 
-## Project Structure
+## Tech overview
 
-```
-bitstra-v1/
-├── src/
-│   ├── components/          # Reusable UI components
-│   │   ├── ui/             # Shadcn/ui component library
-│   │   ├── DataPlanCard.tsx
-│   │   ├── FormCard.tsx
-│   │   ├── Navbar.tsx
-│   │   ├── TopUpButton.tsx
-│   │   ├── TopUpForm.tsx
-│   │   └── TransactionStatus.tsx
-│   ├── hooks/              # Custom React hooks
-│   ├── lib/                # Utility libraries
-│   │   ├── bitnob.ts       # Bitnob API integration
-│   │   └── utils.ts        # General utilities
-│   ├── pages/              # Application pages/routes
-│   │   ├── Airtime.tsx
-│   │   ├── Data.tsx
-│   │   ├── UtilityBills.tsx
-│   │   ├── Confirm.tsx
-│   │   ├── Contact.tsx
-│   │   ├── Home.tsx
-│   │   ├── Index.tsx
-│   │   └── NotFound.tsx
-│   ├── App.tsx             # Main application component
-│   ├── main.tsx            # Application entry point
-│   ├── index.css           # Global styles
-│   └── .env                # Environment variables
-├── public/                 # Static assets
-├── docs/                   # Documentation files
-├── package.json            # Dependencies and scripts
-├── vite.config.ts          # Vite configuration
-├── tailwind.config.ts      # TailwindCSS configuration
-├── tsconfig.json           # TypeScript configuration
-└── components.json         # Shadcn/ui configuration
-```
+- Frontend: React + TypeScript
+- Build: Vite
+- Styling: TailwindCSS and shadcn/ui components (`src/components/ui`)
+- Routing: React Router
+- API / server state: TanStack Query + Axios
+- Forms & validation: React Hook Form + Zod
+- Payment integration: `src/lib/bitnob.ts`
 
-## Build Steps
+## Quick start
 
-### 1. Clone and Setup
+Prerequisites:
+
+- Node.js v18+
+- npm
+
+Clone and install:
 
 ```bash
 git clone <repository-url>
-cd bitstra-v1
-```
-
-### 2. Install Dependencies
-
-```bash
+cd bitstra
 npm install
 ```
 
-This will install all required dependencies including:
-
-- **Core Dependencies**:
-  - React 18.3.1
-  - React DOM 18.3.1
-  - TypeScript 5.8.3
-  - Vite 5.4.19
-
-- **UI/Styling Dependencies**:
-  - TailwindCSS 3.4.17
-  - Radix UI components
-  - Lucide React icons
-  - Class Variance Authority for component variants
-
-- **Functionality Dependencies**:
-  - React Router DOM for navigation
-  - TanStack Query for API state management
-  - React Hook Form with Zod validation
-  - Axios for HTTP requests
-  - QRCode libraries for payment QR generation
-
-### 3. Environment Configuration
-
-Create or verify the `.env` file in the `src` directory:
+Create a `.env` with at least the API key and base URL for your payment provider. Example:
 
 ```env
-VITE_BITNOB_API_KEY=your_bitnob_api_key
-VITE_BITNOB_BASE_URL=https://sandboxapi.bitnob.com/api/v1
-VITE_BITNOB_ENV=sandbox
-MODE=development
+VITE_BITNOB_API_KEY=your_api_key
+VITE_BITNOB_BASE_URL=https://api.example.com
+VITE_BITNOB_ENV=production
 ```
 
-**Note**: The project uses Bitnob sandbox environment. In sandbox mode, payment request decoding has limitations, so QR code generation is mocked for demonstration purposes.
-
-### 4. Development Server
-
-Start the development server:
+Run locally:
 
 ```bash
 npm run dev
 ```
 
-This will:
-- Start Vite development server on port 8080
-- Enable hot module replacement
-- Serve the application at `http://localhost:8080`
-
-### 5. Production Build
-
-For production deployment:
+Build and preview:
 
 ```bash
 npm run build
-```
-
-This command:
-- Compiles TypeScript to JavaScript
-- Bundles all assets using Vite
-- Optimizes code for production
-- Outputs build files to `dist/` directory
-
-### 6. Development Build
-
-For development environment build:
-
-```bash
-npm run build:dev
-```
-
-### 7. Preview Production Build
-
-To preview the production build locally:
-
-```bash
 npm run preview
 ```
 
-### 8. Code Quality
-
-Run ESLint for code quality checks:
+Code quality:
 
 ```bash
 npm run lint
 ```
 
-## Key Configuration Files
+## Contributing
 
-### Vite Configuration (`vite.config.ts`)
+Contributions are welcome. 
 
-- Configures React SWC plugin for fast compilation
-- Sets up path aliases (`@` points to `src` directory)
-- Configures development server on port 8080
+Read `doc` folder for better understanding
 
-### TailwindCSS Configuration (`tailwind.config.ts`)
+Common areas:
+- Improve UI, accessibility, and mobile experience (`src/components`)
+- Add or refine integrations to local airtime/data/utility providers
+- Payment integration: Harden payment flows and error handling in `src/lib/bitnob.ts`
+- UI components: `src/components`
+- Pages: `src/pages`
+- App entry: `src/main.tsx`, `src/App.tsx`
 
-- Extends default theme with custom colors
-- Configures CSS variables for theming
-- Includes animations and component styling
-- Integrates with Shadcn/ui design system
+### Steps to take for contribution: 
 
-### TypeScript Configuration
+1. Fork and create a branch for your change.
+2. Run tests and linting locally.
+3. Open a pull request with a clear description and motivation.
 
-- `tsconfig.json`: Main TypeScript configuration
-- `tsconfig.app.json`: Application-specific settings
-- `tsconfig.node.json`: Node.js environment settings
+Code style: follow TypeScript strict mode and ESLint rules.
 
-## API Integration
+## Security
 
-### Bitnob SDK Integration
-
-The project integrates with Bitnob's Bitcoin Lightning API through `src/lib/bitnob.ts`:
-
-- **Sandbox Environment**: Uses sandbox API for development
-- **Payment Methods**: Supports airtime, data plans, and utility bill payments
-- **QR Code Limitation**: Due to sandbox limitations in payment request decoding, QR codes are mocked
-- **Error Handling**: Comprehensive error handling for API failures
-
-### Mock QR Implementation
-
-Since Bitnob sandbox cannot decode payment requests properly, the application includes:
-
-- Mock QR code generation for demonstration
-- Simulated payment flow
-- Test transaction data
-
-## Deployment Considerations
-
-### Environment Variables
-
-For production deployment, ensure:
-
-- Use production Bitnob API credentials
-- Set `VITE_BITNOB_ENV=production`
-- Update base URL to production endpoint
-
-### Build Optimization
-
-The production build includes:
-
-- Tree shaking for unused code elimination
-- Code splitting for optimal loading
-- Asset optimization and compression
-- TypeScript compilation with type checking
-
-### Static Hosting
-
-The built application can be deployed to:
-
-- Vercel
-- Netlify
-- GitHub Pages
-- AWS S3 + CloudFront
-- Any static hosting service
-
-## Development Guidelines
-
-### Component Structure
-
-- Use functional components with TypeScript
-- Implement proper prop typing
-- Follow Shadcn/ui component patterns
-- Maintain consistent styling with TailwindCSS
-
-### State Management
-
-- Use TanStack Query for server state
-- React Hook Form for form state
-- Local state with useState for UI state
-
-### Code Quality
-
-- Follow ESLint configuration
-- Use TypeScript strict mode
-- Implement proper error boundaries
-- Write descriptive component and function names
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Port Conflicts**: If port 8080 is in use, modify `vite.config.ts`
-2. **Environment Variables**: Ensure `.env` file is in `src` directory
-3. **Dependencies**: Run `npm install` if modules are missing
-4. **Build Errors**: Check TypeScript errors in terminal output
-
-### Bitnob Integration Issues
-
-- Verify API credentials in environment variables
-- Check network connectivity for API calls
-- Review Bitnob documentation for endpoint changes
-- Use sandbox environment for development
-
-## Additional Resources
-
-- [Vite Documentation](https://vitejs.dev/)
-- [React Documentation](https://react.dev/)
-- [TailwindCSS Documentation](https://tailwindcss.com/)
-- [Bitnob API Documentation](https://docs.bitnob.com/)
-- [Shadcn/ui Components](https://ui.shadcn.com/)
+- Keep API keys and secrets out of version control. Use environment variables or secret stores.
