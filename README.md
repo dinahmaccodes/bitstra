@@ -64,7 +64,7 @@ Prerequisites:
 Clone and install:
 
 ```bash
-git clone <repository-url>
+git clone git@github.com:dinahbtcdev/bitstra.git
 cd bitstra
 npm install
 ```
