@@ -33,7 +33,8 @@ Bitstra follows a modern React architecture with the following key components:
 
 ## Image of Flow and Technical Architecture
 
-![alt text](<Screenshot from 2025-10-03 19-51-39.png>)
+
+![alt text](docs/mvp-techical-architecture.png)
 
 ## Prerequisites
 
