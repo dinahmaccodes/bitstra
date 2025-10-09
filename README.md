@@ -1,4 +1,4 @@
-#NB: Updated repository can be found here 
+# NB: Updated repository can be found here 
 
 https://github.com/dinahbtcdev/bitstra
 
