@@ -1,3 +1,7 @@
+#NB: Updated repository can be found here 
+
+https://github.com/dinahbtcdev/bitstra
+
 # Bitstra
 
 Bitstra is an open-source web platform that enables people—especially women—to buy mobile data, airtime, and pay utility bills using Bitcoin (Lightning). The project aims to reduce friction for everyday transactions and improve financial autonomy.
