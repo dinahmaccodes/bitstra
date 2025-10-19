@@ -37,7 +37,6 @@ Bitstra follows a modern React architecture with the following key components:
 
 ## Image of Flow and Technical Architecture
 
-
 ![alt text](docs/mvp-techical-architecture.png)
 
 ## Prerequisites
@@ -102,19 +101,20 @@ npm run lint
 
 ## Contributing
 
-Contributions are welcome. 
+Contributions are welcome.
 
 Read `doc` folder for better understanding
 
 Common areas:
-- Improve UI, accessibility, and mobile experience (`src/components`)
+
+- Improve UI, accessibility for website and mobile responsiveness (`src/components`)
 - Add or refine integrations to local airtime/data/utility providers
 - Payment integration: Harden payment flows and error handling in `src/lib/bitnob.ts`
 - UI components: `src/components`
 - Pages: `src/pages`
 - App entry: `src/main.tsx`, `src/App.tsx`
 
-### Steps to take for contribution: 
+### Steps to take for contribution
 
 1. Fork and create a branch for your change.
 2. Run tests and linting locally.

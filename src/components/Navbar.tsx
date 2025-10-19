@@ -12,13 +12,17 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="w-full bg-surface border-b border-border shadow-md">
+    <nav className="w-full bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-center h-16 relative">
           {/* Logo - positioned on the left */}
           <div className="absolute left-0 flex items-center space-x-3">
-            <Link to="/" className="text-2xl font-bold text-foreground">
-              Bitstra
+            <Link to="/" className="flex items-center">
+              <img
+                src="/bitstra-logo.svg"
+                alt="Bitstra"
+                className="h-8 w-auto"
+              />
             </Link>
           </div>
 
@@ -31,8 +35,8 @@ const Navbar = () => {
                   to={item.path}
                   className={`px-3 py-2 text-sm font-medium transition-colors rounded-md ${
                     location.pathname === item.path
-                      ? "text-success bg-success/10"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      ? "text-[#10B981] bg-[#10B981]/10"
+                      : "text-gray-700 hover:text-black hover:bg-gray-100"
                   }`}
                 >
                   {item.name}
